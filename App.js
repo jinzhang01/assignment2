@@ -1,24 +1,60 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { View, Text } from 'react-native';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Activities from './screens/Activities';
+import AddActivity from './screens/AddActivity';
+import AddDiet from './screens/AddDiet';
+import Diet from './screens/Diet';
+import Settings from './screens/Settings';
 
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-
-export default function App() {
+function ActivitiesStack() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ActivitiesHome" component={Activities} />
+      <Stack.Screen name="AddActivity" component={AddActivity} />
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function DietStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="DietHome" component={Diet} />
+      <Stack.Screen name="AddDiet" component={AddDiet} />
+    </Stack.Navigator>
+  );
+}
+
+function MyTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen 
+        name="Activities" 
+        component={ActivitiesStack} 
+      />
+      <Tab.Screen 
+        name="Diet" 
+        component={DietStack} 
+      />
+      <Tab.Screen 
+        name="Settings" 
+        component={Settings} 
+      />
+    </Tab.Navigator>
+  );
+}
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <MyTabs />
+    </NavigationContainer>
+  );
+}
+
+export default App;
