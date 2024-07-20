@@ -1,19 +1,25 @@
 import React, { useEffect } from 'react';
 import { View, Text, Button } from 'react-native';
+import PressableButton from '../component/PressableButton';
 
 const Activities = ({ navigation }) => {
-  // Use useLayoutEffect to set navigation options
   useEffect(() => {
+
     navigation.setOptions({
+      title: 'Add An Activity',
       headerRight: () => (
-        <Button onPress={() => navigation.navigate('AddActivity')} title="Add" />
+        <PressableButton pressedFunction={() => navigation.navigate('AddActivity')}>
+          <Text>Add</Text>
+        </PressableButton>
       ),
     });
   }, [navigation]);
 
+
+
   return (
     <View>
-      <Text>Activities</Text>
+      <Text>Activities!!!</Text>
     </View>
   );
 };

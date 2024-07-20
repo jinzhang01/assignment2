@@ -14,7 +14,7 @@ const Tab = createBottomTabNavigator();
 
 function ActivitiesStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator >
       <Stack.Screen name="ActivitiesHome" component={Activities} />
       <Stack.Screen name="AddActivity" component={AddActivity} />
     </Stack.Navigator>
@@ -23,7 +23,7 @@ function ActivitiesStack() {
 
 function DietStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator >
       <Stack.Screen name="DietHome" component={Diet} />
       <Stack.Screen name="AddDiet" component={AddDiet} />
     </Stack.Navigator>
@@ -32,8 +32,8 @@ function DietStack() {
 
 function MyTabs() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen 
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Screen  
         name="Activities" 
         component={ActivitiesStack} 
       />
@@ -41,7 +41,7 @@ function MyTabs() {
         name="Diet" 
         component={DietStack} 
       />
-      <Tab.Screen 
+      <Tab.Screen  
         name="Settings" 
         component={Settings} 
       />
