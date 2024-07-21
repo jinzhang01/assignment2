@@ -1,12 +1,18 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from 'react-native';
+import React from 'react';
 
-const ItemsList = () => {
+const ItemsList = ({ contentType, passItem }) => {
   return (
     <View>
-      <Text>ItemsList</Text>
+      <Text> {passItem.name} </Text>
+      <Text> {passItem.date} </Text>
+      {contentType === 'activity' ? (
+        <Text> {passItem.duration} </Text>
+      ) : (
+        <Text> {passItem.amount} </Text>
+      )}
     </View>
-  )
-}
+  );
+};
 
-export default ItemsList
+export default ItemsList;

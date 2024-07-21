@@ -4,7 +4,15 @@ import React from 'react'
 const AddDiet = () => {
   return (
     <View>
-      <Text>AddDiet</Text>
+      <Text>Description *</Text>
+      <Input placeholder="Enter description"  
+      />
+
+      <Text>Calories *</Text>
+      <Input placeholder="Enter calories"
+      />
+
+      
     </View>
   )
 }

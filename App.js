@@ -15,7 +15,7 @@ const Tab = createBottomTabNavigator();
 function ActivitiesStack() {
   return (
     <Stack.Navigator >
-      <Stack.Screen name="ActivitiesHome" component={Activities} />
+      <Stack.Screen name="Activities Home" component={Activities} />
       <Stack.Screen name="AddActivity" component={AddActivity} />
     </Stack.Navigator>
   );
