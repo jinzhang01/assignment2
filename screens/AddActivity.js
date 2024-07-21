@@ -13,7 +13,7 @@ import { colors } from "../style/colors";
 
 const AddActivity = ({ navigation }) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [activity, setActivity] = useState(null);
   const [items, setItems] = useState([
     { label: "Walking", value: "Walking" },
     { label: "Running", value: "Running" },
@@ -50,20 +50,35 @@ const AddActivity = ({ navigation }) => {
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
+// When user press the save button, you should validate user's entries (e.g. no negative number or letters for duration, no empty submission,...) and show an alertLinks to an external site. indicating if any input has invalid data
+  function handleSave() {
+    if (activity === null || duration === null || duration === "" || date === null) {
+      alert("Please fill in all required fields");
+      return false;
+    }
+    if (isNaN(duration) || duration < 0) {
+      alert("Duration must be a positive number");
+      return false;
+    }
+    console.log(`Activity: ${activity}, Duration: ${duration}, Date: ${date}`);
+    return true;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.upperContainer}>
         <View >
           <Text style={styles.label}>Activity*</Text>
           <DropDownPicker
-            backgroudColor="white"
             open={open}
-            value={value}
+            value={activity}
             items={items}
             setOpen={setOpen}
-            setValue={setValue}
+            setValue={setActivity}
             setItems={setItems}
             style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainer}
+            placeholder="Select an item"
           />
         </View>
 
@@ -73,7 +88,7 @@ const AddActivity = ({ navigation }) => {
             keyboardType="numeric"
             value={duration}
             onChangeText={checkDuration}
-            style={styles.inputContainer}
+            style={styles.textInput}
           />
         </View>
 
@@ -81,7 +96,7 @@ const AddActivity = ({ navigation }) => {
           <Text style={styles.label}>Date *</Text>
           <TouchableOpacity
             onPress={() => setShowDatePicker(true)}
-            style={{ borderWidth: 1, borderColor: "black", padding: 10 }}
+            style={styles.textInput}
           >
             <Text>{formatDate(date)}</Text>
           </TouchableOpacity>
@@ -100,15 +115,14 @@ const AddActivity = ({ navigation }) => {
 
       <View style={styles.buttonContainer}>
         <PressableButton pressedFunction={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Cancel</Text>
+          <Text style={styles.buttonTextCancel}>Cancel</Text>
         </PressableButton>
         <PressableButton
           pressedFunction={() => {
-            handleSave();
-            navigation.goBack();
+            handleSave() && navigation.goBack()
           }}
         >
-          <Text  style={styles.buttonText}>Save</Text>
+          <Text  style={styles.buttonTextSave}>Save</Text>
         </PressableButton>
       </View>
     </View>
@@ -121,8 +135,6 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: colors.Background,
     justifyContent: 'center',
-
-
   },
   upperContainer: {
     marginBottom: 20,
@@ -141,13 +153,23 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     backgroundColor: colors.lightBackground,
     marginBottom: 20,
+    marginTop: 5,
+    zIndex: 10, // Ensure dropdown is above other elements
   },
+  dropdownContainer: {
+    backgroundColor:  colors.lightBackground,
+    marginTop: 5,
+    zIndex: 1000, 
+    elevation: 1000, 
+  },
+
   textInput: {
     borderWidth: 1,
     borderColor: colors.primary,
     backgroundColor: colors.lightBackground,
     padding: 10,
     marginBottom: 20,
+    borderRadius: 5,
   },
 
   buttonContainer: {
@@ -156,11 +178,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 20,
   },
-  buttonText: {
+  buttonTextSave: {
     color: colors.Text,
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: colors.primary,
+    borderRadius: 5,
+  },
+  buttonTextCancel: {
+    color: colors.Text,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: colors.cancel,
     borderRadius: 5,
   },
 });
