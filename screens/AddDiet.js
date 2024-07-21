@@ -7,7 +7,6 @@ const AddDiet = ({navigation}) => {
   const [calories, setCalories] = useState('');
 
   const handleSave = () => {
-    // Handle save action here without Alert
     console.log(`Description: ${description}, Calories: ${calories}`);
   };
 
