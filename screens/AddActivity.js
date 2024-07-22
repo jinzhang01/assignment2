@@ -93,6 +93,7 @@ const AddActivity = ({ navigation }) => {
             onPress={() => setShowDatePicker(true)}
             style={styles.textInput}
           >
+          
           {hasUserSelected && <Text>{formatDate(date)}</Text>}
           </TouchableOpacity>
           {showDatePicker && (
@@ -169,6 +170,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     borderRadius: 5,
+    height: 40,
   },
 
   buttonContainer: {

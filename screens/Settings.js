@@ -9,13 +9,13 @@ const Settings = () => {
 
   const backgroundStyle = {
     flex: 1,
-    backgroundColor: darkTheme ? colors.Darkmode : colors.lightBackground,
+    backgroundColor: darkTheme ? colors.Darkmode : colors.Background,
     alignItems: 'center',
     justifyContent: 'center',
   };
 
   const textStyle = {
-    color: darkTheme ? colors.WhiteText : colors.BlackText ,
+    color: darkTheme ? colors.WhiteText : colors.BlackText,
   };
 
   return (

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import PressableButton from '../component/PressableButton';
 import { colors } from '../style/colors';
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const AddDiet = ({navigation}) => {
   const [description, setDescription] = useState('');
   const [calories, setCalories] = useState('');
   const [isspecial, setSpecial] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [hasUserSelected, setHasUserSelected] = useState(false);
 
   //When user press the save button, you should validate user's entries (e.g. no negative number or letters for calories, no empty submission,...) and show an alertLinks to an external site. indicating if any input has invalid data.
   function handleSave() {
@@ -32,6 +36,16 @@ const AddDiet = ({navigation}) => {
     }
   }
 
+  const formatDate = (date) => {
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+    setShowDatePicker(false);
+  };
+
 
   return (
     <View style={styles.container}>
@@ -53,8 +67,28 @@ const AddDiet = ({navigation}) => {
           onChangeText={setCalories}
           onBlur={handlespeical}
         />
-
+        <View>
         <Text style={styles.label}>Date *</Text>
+          <TouchableOpacity
+            onPress={() => setShowDatePicker(true)}
+            style={styles.dateInput}
+          >
+          
+          {hasUserSelected && <Text>{formatDate(date)}</Text>}
+          </TouchableOpacity>
+          {showDatePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode="date"
+              display="inline"
+              onChange={(event) => {
+                onChangeDate(event);
+                setHasUserSelected(true);
+              }}
+            />
+          )}
+        </View>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -109,6 +143,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 5,
     height: 100,
+  },
+
+  dateInput: {
+    borderWidth: 1,
+    borderColor: colors.primary,
+    backgroundColor: colors.lightBackground,
+    padding: 10,
+    marginBottom: 20,
+    borderRadius: 5,
+    height: 40,
   },
 
 
