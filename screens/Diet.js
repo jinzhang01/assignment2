@@ -33,14 +33,7 @@ const Diet = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        renderItem={({ item }) => {
-          return (
-            <ItemsList contentType="diet" passItem={item} />
-          );
-        }}
-        data={mockDiet} 
-      />
+      <ItemsList contentType="diet" items={mockDiet} />
 
     </View>
   )

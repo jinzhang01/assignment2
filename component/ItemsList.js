@@ -1,21 +1,26 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import React from 'react';
 import { colors } from '../style/colors';
 
-const ItemsList = ({ contentType, passItem }) => {
+const ItemsList = ({ contentType, items }) => {
   return (
-    <View style={styles.container}>
-      <Text> {passItem.name} </Text>
-      <Text> {passItem.date} </Text>
-      {contentType === 'activity' ? (
-        <Text> {passItem.duration} </Text>
-      ) : (
-        <Text> {passItem.calories} </Text>
+    <FlatList
+      data={items}
+      renderItem={({ item }) => (
+        <View style={styles.container}>
+          <Text> {item.name} </Text>
+          <Text> {item.date} </Text>
+          {contentType === 'activity' ? (
+            <Text> {item.duration} </Text>
+          ) : (
+            <Text> {item.calories} </Text>
+          )}
+        </View>
       )}
-    </View>
+      keyExtractor={item => item.name}
+    />
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +35,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
 export default ItemsList;
-

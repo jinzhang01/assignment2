@@ -32,16 +32,7 @@ const Activities = ({ navigation }) => {
   // may move the flatlist to ItemsList component
   return (
     <View style={styles.container}>
-      
-      <FlatList
-        renderItem={({ item }) => {
-          return (
-            <ItemsList contentType="activity" passItem={item} />
-          );
-        }}
-        data={mockActivities}
-      />
-
+      <ItemsList contentType="activity" items={mockActivities} />
     </View>
   );
 };
