@@ -11,4 +11,5 @@ export const colors = {
     warning: "#F57C00", // Orange
     cancel: "#C62828", // Dark Red
     lightblue: "lightblue",
+
 };

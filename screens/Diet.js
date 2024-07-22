@@ -34,7 +34,6 @@ const Diet = ({navigation}) => {
   return (
     <View style={styles.container}>
       <ItemsList contentType="diet" items={mockDiet} />
-
     </View>
   )
 }

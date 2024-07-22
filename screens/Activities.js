@@ -7,7 +7,6 @@ import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
 const Activities = ({ navigation }) => {
   useEffect(() => {
-
     navigation.setOptions({
       headerRight: () => (
         <PressableButton pressedFunction={() => navigation.navigate('AddActivity')}>

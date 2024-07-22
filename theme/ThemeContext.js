@@ -1,8 +1,21 @@
 import React, { createContext, useContext, useState } from 'react';
+import { colors } from '../style/colors';
+
+const lightThemeColors = {
+  background: colors.Background,
+  text: colors.BlackText,
+  button: "lightgreen",
+};
+
+const darkThemeColors = {
+  background: colors.Darkmode,
+  text: colors.WhiteText,
+  button: "red",
+};
 
 // Create a context with a default value
 const ThemeContext = createContext({
-  darkTheme: false,
+  theme: lightThemeColors,
   toggleTheme: () => {},
 });
 
@@ -15,9 +28,10 @@ export const ThemeProvider = ({ children }) => {
     setDarkTheme(!darkTheme);
   };
 
+  const theme = darkTheme ? darkThemeColors : lightThemeColors;
 
   return (
-    <ThemeContext.Provider value={{ darkTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
