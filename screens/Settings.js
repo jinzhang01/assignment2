@@ -1,12 +1,30 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { useTheme } from '../theme/ThemeContext';
+import { colors } from '../style/colors';
+import PressableButton from '../component/PressableButton';
 
 const Settings = () => {
-  return (
-    <View>
-      <Text>Settings</Text>
-    </View>
-  )
-}
+  const { darkTheme, toggleTheme } = useTheme();
 
-export default Settings
+  const backgroundStyle = {
+    flex: 1,
+    backgroundColor: darkTheme ? colors.Darkmode : colors.lightBackground,
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
+
+  const textStyle = {
+    color: darkTheme ? colors.WhiteText : colors.BlackText ,
+  };
+
+  return (
+    <View style={backgroundStyle}>
+      <PressableButton pressedFunction={toggleTheme}>
+        <Text style={textStyle}>Toggle Theme</Text>
+      </PressableButton>
+    </View>
+  );
+};
+
+export default Settings;

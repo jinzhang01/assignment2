@@ -8,6 +8,7 @@ import AddActivity from './screens/AddActivity';
 import AddDiet from './screens/AddDiet';
 import Diet from './screens/Diet';
 import Settings from './screens/Settings';
+import { ThemeProvider } from './theme/ThemeContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,6 +31,14 @@ function DietStack() {
   );
 }
 
+function SettingsStack() {
+  return (
+    <Stack.Navigator >
+      <Stack.Screen name="Settings Home" component={Settings} />
+    </Stack.Navigator>
+  );
+}
+
 function MyTabs() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
@@ -43,7 +52,7 @@ function MyTabs() {
       />
       <Tab.Screen  
         name="Settings" 
-        component={Settings} 
+        component={SettingsStack} 
       />
     </Tab.Navigator>
   );
@@ -51,9 +60,11 @@ function MyTabs() {
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <MyTabs />
-    </NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer>
+        <MyTabs />
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
 

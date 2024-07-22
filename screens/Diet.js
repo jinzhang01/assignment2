@@ -2,6 +2,7 @@ import { View, Text, FlatList } from 'react-native'
 import React, { useEffect }  from 'react'
 import PressableButton from '../component/PressableButton';
 import ItemsList from '../component/ItemsList';
+import { useTheme } from '../theme/ThemeContext';
 
 
 const Diet = ({navigation}) => {
