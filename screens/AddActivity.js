@@ -19,6 +19,7 @@ const AddActivity = ({ navigation }) => {
   const [isSpecial, setSpecial] = useState(false);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [hasUserSelected, setHasUserSelected] = useState(false);
 
   console.log("date:", showDatePicker);
 
@@ -92,16 +93,20 @@ const AddActivity = ({ navigation }) => {
             onPress={() => setShowDatePicker(true)}
             style={styles.textInput}
           >
-            <Text>{formatDate(date)}</Text>
+          {hasUserSelected && <Text>{formatDate(date)}</Text>}
           </TouchableOpacity>
           {showDatePicker && (
             <DateTimePicker
               testID="dateTimePicker"
               value={date}
               mode="date"
-              is24Hour={true}
               display="inline"
-              onChange={onChangeDate}
+              onChange={(event) => {
+                onChangeDate(event);
+                setHasUserSelected(true);
+              }}
+              
+
             />
           )}
         </View>

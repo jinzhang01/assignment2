@@ -29,8 +29,10 @@ const Activities = ({ navigation }) => {
     { name: 'Yoga', date: '2021-10-04', duration: 90 },
   ];
 
+  // may move the flatlist to ItemsList component
   return (
     <View style={styles.container}>
+      
       <FlatList
         renderItem={({ item }) => {
           return (
