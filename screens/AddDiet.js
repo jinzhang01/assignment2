@@ -43,6 +43,7 @@ const AddDiet = ({navigation}) => {
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
+    setHasUserSelected(true); 
     setShowDatePicker(false);
   };
 
@@ -67,27 +68,29 @@ const AddDiet = ({navigation}) => {
           onChangeText={setCalories}
           onBlur={handlespeical}
         />
-        <View>
+        <View >
         <Text style={styles.label}>Date *</Text>
-          <TouchableOpacity
-            onPress={() => setShowDatePicker(true)}
-            style={styles.dateInput}
-          >
-          
-          {hasUserSelected && <Text>{formatDate(date)}</Text>}
-          </TouchableOpacity>
-          {showDatePicker && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode="date"
-              display="inline"
-              onChange={(event) => {
-                onChangeDate(event);
-                setHasUserSelected(true);
-              }}
-            />
-          )}
+            <View style={styles.index}>
+              <TouchableOpacity
+                onPress={() => setShowDatePicker(true)}
+                style={styles.dateInput}
+              >
+              
+              {hasUserSelected && <Text>{formatDate(date)}</Text>}
+              </TouchableOpacity >
+              {showDatePicker && (
+                <View style={styles.modalContainer}>
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode="date"
+                    is24Hour={true}
+                    display="inline"
+                    onChange={onChangeDate} // Use the corrected onChangeDate function
+                  />
+                </View>
+              )}
+            </View>  
         </View>
       </View>
 
@@ -175,6 +178,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: colors.cancel,
     borderRadius: 5,
+  },
+  index: {
+    zIndex: 10,
   },
 });
 

@@ -38,10 +38,13 @@ const AddActivity = ({ navigation }) => {
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
+    setHasUserSelected(true); 
     setShowDatePicker(false);
   };
 
+  
   const formatDate = (date) => {
+
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
@@ -62,7 +65,7 @@ const AddActivity = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.upperContainer}>
-        <View >
+        <View style={styles.zIndex}>
           <Text style={styles.label}>Activity*</Text>
           <DropDownPicker
             open={open}
@@ -72,9 +75,12 @@ const AddActivity = ({ navigation }) => {
             setValue={setActivity}
             setItems={setItems}
             style={styles.dropdown}
-            dropDownContainerStyle={styles.dropdownContainer}
+            // containerStyle={styles.dropdownContainer}
             placeholder="Select an item"
-          />
+            // textStyle={{ fontSize: 18, backgroundColor: colors.Dark }}
+            // some styling for the dropdown
+          
+          />  
         </View>
 
         <View>
@@ -87,7 +93,7 @@ const AddActivity = ({ navigation }) => {
           />
         </View>
 
-        <View>
+        <View style={styles.calandarDropdown}>
           <Text style={styles.label}>Date *</Text>
           <TouchableOpacity
             onPress={() => setShowDatePicker(true)}
@@ -102,12 +108,7 @@ const AddActivity = ({ navigation }) => {
               value={date}
               mode="date"
               display="inline"
-              onChange={(event) => {
-                onChangeDate(event);
-                setHasUserSelected(true);
-              }}
-              
-
+              onChange={onChangeDate}
             />
           )}
         </View>
@@ -151,16 +152,16 @@ const styles = StyleSheet.create({
   dropdown: {
     borderWidth: 1,
     borderColor: colors.primary,
-    backgroundColor: colors.lightBackground,
+    // backgroundColor: colors.light,
     marginBottom: 20,
-    marginTop: 5,
-    zIndex: 10, // Ensure dropdown is above other elements
+    marginTop: 5
   },
   dropdownContainer: {
-    backgroundColor:  colors.lightBackground,
+    backgroundColor: colors.light,
     marginTop: 5,
-    zIndex: 1000, 
-    elevation: 1000, 
+  },
+  zIndex: {
+    zIndex: 10,
   },
 
   textInput: {
