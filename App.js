@@ -9,50 +9,89 @@ import AddDiet from './screens/AddDiet';
 import Diet from './screens/Diet';
 import Settings from './screens/Settings';
 import { ThemeProvider } from './theme/ThemeContext';
+import { FontAwesome5, MaterialIcons, Ionicons} from '@expo/vector-icons';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function ActivitiesStack() {
   return (
-    <Stack.Navigator >
-      <Stack.Screen name="Activities Home" component={Activities} />
-      <Stack.Screen name="AddActivity" component={AddActivity} />
+    <Stack.Navigator 
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: 'lightblue', 
+        },
+      }}
+    >
+      <Stack.Screen name="Activities " component={Activities} />
+      <Stack.Screen name="AddActivity" component={AddActivity} options={{ title: 'Add An Activity' }}/>
     </Stack.Navigator>
   );
 }
 
 function DietStack() {
   return (
-    <Stack.Navigator >
-      <Stack.Screen name="DietHome" component={Diet} />
-      <Stack.Screen name="AddDiet" component={AddDiet} />
+    <Stack.Navigator 
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: 'lightblue', 
+        },
+      }}    
+    >
+      <Stack.Screen name="Diet " component={Diet} />
+      <Stack.Screen name="AddDiet" component={AddDiet} options={{ title: 'Add A Diet Entry' }}/>
     </Stack.Navigator>
   );
 }
 
 function SettingsStack() {
   return (
-    <Stack.Navigator >
-      <Stack.Screen name="Settings Home" component={Settings} />
+    <Stack.Navigator 
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: 'lightblue', 
+        },
+      }}
+    >
+      <Stack.Screen name="Settings " component={Settings} />
     </Stack.Navigator>
   );
 }
 
 function MyTabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen  
-        name="Activities" 
-        component={ActivitiesStack} 
+    <Tab.Navigator screenOptions={{ 
+      headerShown: false,
+      tabBarActiveTintColor: 'tomato',
+      tabBarInactiveTintColor: 'gray',
+      tabBarStyle: { backgroundColor: 'lightblue' },
+      }}>
+      <Tab.Screen
+        name="Activities"
+        component={ActivitiesStack}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome5 name="running" size={size} color={color} />
+          ),
+        }}
       />
       <Tab.Screen 
         name="Diet" 
-        component={DietStack} 
+        component={DietStack}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="fastfood" size={size} color={color} />
+          ),
+        }} 
       />
       <Tab.Screen  
         name="Settings" 
         component={SettingsStack} 
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="settings" size={size} color={color} />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
@@ -61,7 +100,7 @@ function MyTabs() {
 const App = () => {
   return (
     <ThemeProvider>
-      <NavigationContainer>
+      <NavigationContainer >
         <MyTabs />
       </NavigationContainer>
     </ThemeProvider>

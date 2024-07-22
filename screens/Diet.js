@@ -1,8 +1,10 @@
-import { View, Text, FlatList } from 'react-native'
+import { View, Text, FlatList, StyleSheet } from 'react-native'
 import React, { useEffect }  from 'react'
 import PressableButton from '../component/PressableButton';
 import ItemsList from '../component/ItemsList';
-import { useTheme } from '../theme/ThemeContext';
+import { colors } from '../style/colors';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+
 
 
 const Diet = ({navigation}) => {
@@ -16,17 +18,21 @@ const Diet = ({navigation}) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'Diet',
       headerRight: () => (
         <PressableButton pressedFunction={() => navigation.navigate('AddDiet')}>
-          <Text>Add</Text>
+          <View style={styles.buttonContainer}>
+            <AntDesign name="plus" size={24} color="black" />
+            <MaterialIcons name="fastfood" size={24} color="black" />
+          </View>
+
         </PressableButton>
       ),
     });
   }, [navigation]);
+
+
   return (
-    <View>
-      <Text>Diet</Text>
+    <View style={styles.container}>
       <FlatList
         renderItem={({ item }) => {
           return (
@@ -39,5 +45,23 @@ const Diet = ({navigation}) => {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: colors.Background,
+    justifyContent: 'center',
+  },
+  label: {
+    marginBottom: 10,
+    color: colors.Dark,
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+});
 
 export default Diet

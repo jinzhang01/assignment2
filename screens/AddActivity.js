@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import {View, Text,TextInput,TouchableOpacity,StyleSheet,} from "react-native";
 import React, { useState } from "react";
 import PressableButton from "../component/PressableButton";
 import DropDownPicker from "react-native-dropdown-picker";
