@@ -4,6 +4,7 @@ import PressableButton from "../component/PressableButton";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../style/colors";
+import { useTheme } from '../theme/ThemeContext'; 
 
 const AddActivity = ({ navigation }) => {
   const [open, setOpen] = useState(false);
@@ -20,6 +21,23 @@ const AddActivity = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [hasUserSelected, setHasUserSelected] = useState(false);
+  const { theme } = useTheme(); 
+
+
+    const dynamicStyles = StyleSheet.create({
+      container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: theme.background, // Use theme background color
+        justifyContent: 'center',
+      },
+      label: {
+        marginBottom: 10,
+        color: theme.text, // Use theme text color
+        fontWeight: "bold",
+      },
+
+    });
 
   console.log("date:", showDatePicker);
 
@@ -63,10 +81,10 @@ const AddActivity = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={dynamicStyles.container}>
       <View style={styles.upperContainer}>
         <View style={styles.zIndex}>
-          <Text style={styles.label}>Activity*</Text>
+          <Text style={dynamicStyles.label}>Activity*</Text>
           <DropDownPicker
             open={open}
             value={activity}
@@ -75,16 +93,12 @@ const AddActivity = ({ navigation }) => {
             setValue={setActivity}
             setItems={setItems}
             style={styles.dropdown}
-            // containerStyle={styles.dropdownContainer}
             placeholder="Select an item"
-            // textStyle={{ fontSize: 18, backgroundColor: colors.Dark }}
-            // some styling for the dropdown
-          
-          />  
+          />
         </View>
 
         <View>
-          <Text style={styles.label}>Duration(min)*</Text>
+          <Text style={dynamicStyles.label}>Duration(min)*</Text>
           <TextInput
             keyboardType="numeric"
             value={duration}
@@ -93,14 +107,13 @@ const AddActivity = ({ navigation }) => {
           />
         </View>
 
-        <View style={styles.calandarDropdown}>
-          <Text style={styles.label}>Date *</Text>
+        <View style={styles.calendarDropdown}>
+          <Text style={dynamicStyles.label}>Date *</Text>
           <TouchableOpacity
             onPress={() => setShowDatePicker(true)}
             style={styles.textInput}
           >
-          
-          {hasUserSelected && <Text>{formatDate(date)}</Text>}
+            {hasUserSelected && <Text>{formatDate(date)}</Text>}
           </TouchableOpacity>
           {showDatePicker && (
             <DateTimePicker

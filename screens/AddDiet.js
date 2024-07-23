@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import PressableButton from '../component/PressableButton';
 import { colors } from '../style/colors';
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useTheme } from '../theme/ThemeContext';
 
 const AddDiet = ({navigation}) => {
   const [description, setDescription] = useState('');
@@ -11,6 +12,22 @@ const AddDiet = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [hasUserSelected, setHasUserSelected] = useState(false);
+  const { theme } = useTheme(); 
+
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+      backgroundColor: theme.background, // Use theme background color
+      justifyContent: 'center',
+    },
+    label: {
+      marginBottom: 10,
+      color: theme.text, // Use theme text color
+      fontWeight: "bold",
+    },
+    // Add other styles that depend on the theme here
+  });
 
   //When user press the save button, you should validate user's entries (e.g. no negative number or letters for calories, no empty submission,...) and show an alertLinks to an external site. indicating if any input has invalid data.
   function handleSave() {
@@ -49,17 +66,16 @@ const AddDiet = ({navigation}) => {
 
 
   return (
-    <View style={styles.container}>
-      <View style={styles.upperContainer}>
-        <Text style={styles.label}>Description *</Text>
+    <View style={dynamicStyles.container}>
+      <View style={dynamicStyles.upperContainer}>
+        <Text style={dynamicStyles.label}>Description *</Text>
         <TextInput 
           style={styles.textInputLarger}
           placeholder="Enter description"
           value={description}
           onChangeText={setDescription}
         />
-
-        <Text style={styles.label}>Calories *</Text>
+        <Text style={dynamicStyles.label}>Calories *</Text>
         <TextInput
           style={styles.textInput}
           placeholder="Enter calories"
@@ -69,7 +85,7 @@ const AddDiet = ({navigation}) => {
           onBlur={handlespeical}
         />
         <View >
-        <Text style={styles.label}>Date *</Text>
+        <Text style={dynamicStyles.label}>Date *</Text>
             <View style={styles.index}>
               <TouchableOpacity
                 onPress={() => setShowDatePicker(true)}
