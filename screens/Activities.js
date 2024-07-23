@@ -4,8 +4,26 @@ import PressableButton from '../component/PressableButton';
 import ItemsList from '../component/ItemsList';
 import { colors } from '../style/colors';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import { useTheme } from '../theme/ThemeContext';
 
 const Activities = ({ navigation }) => {
+
+  const { theme } = useTheme();
+
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+      backgroundColor: theme.background, 
+      justifyContent: 'center',
+    },
+    label: {
+      marginBottom: 10,
+      color: theme.text, 
+      fontWeight: "bold",
+    },
+  });
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -30,7 +48,7 @@ const Activities = ({ navigation }) => {
 
   // may move the flatlist to ItemsList component
   return (
-    <View style={styles.container}>
+    <View style={dynamicStyles.container}>
       <ItemsList contentType="activity" items={mockActivities} />
     </View>
   );

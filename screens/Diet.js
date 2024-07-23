@@ -4,10 +4,10 @@ import PressableButton from '../component/PressableButton';
 import ItemsList from '../component/ItemsList';
 import { colors } from '../style/colors';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-
-
+import { useTheme } from '../theme/ThemeContext'; 
 
 const Diet = ({navigation}) => {
+  const { theme } = useTheme(); 
   // mock Diet data name, date, calories
   const mockDiet = [
     { name: 'Breakfast', date: '2021-10-01', calories: 300 },
@@ -15,6 +15,20 @@ const Diet = ({navigation}) => {
     { name: 'Dinner', date: '2021-10-03', calories: 700 },
     { name: 'Snack', date: '2021-10-04', calories: 200},
   ];
+
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+      backgroundColor: theme.background, // Use theme background color
+      justifyContent: 'center',
+    },
+    label: {
+      marginBottom: 10,
+      color: theme.text, // Use theme text color
+      fontWeight: "bold",
+    },
+  });
 
   useEffect(() => {
     navigation.setOptions({
@@ -32,7 +46,7 @@ const Diet = ({navigation}) => {
 
 
   return (
-    <View style={styles.container}>
+    <View style={dynamicStyles.container}>
       <ItemsList contentType="diet" items={mockDiet} />
     </View>
   )
