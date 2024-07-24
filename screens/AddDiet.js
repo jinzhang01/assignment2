@@ -4,6 +4,7 @@ import PressableButton from '../component/PressableButton';
 import { colors } from '../style/colors';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useTheme } from '../theme/ThemeContext';
+import { writeToDb } from "../firebase/firestoreHelper";
 
 const AddDiet = ({navigation}) => {
   const [description, setDescription] = useState('');
@@ -13,6 +14,8 @@ const AddDiet = ({navigation}) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [hasUserSelected, setHasUserSelected] = useState(false);
   const { theme } = useTheme(); 
+  const [record, setRecord] = useState({});
+
 
   const dynamicStyles = StyleSheet.create({
     container: {
@@ -23,13 +26,14 @@ const AddDiet = ({navigation}) => {
     },
     label: {
       marginBottom: 10,
-      color: theme.text, // Use theme text color
+      color: theme.text, 
       fontWeight: "bold",
     },
-    // Add other styles that depend on the theme here
+   
   });
 
-  //When user press the save button, you should validate user's entries (e.g. no negative number or letters for calories, no empty submission,...) and show an alertLinks to an external site. indicating if any input has invalid data.
+  //When user press the save button, you should validate user's entries 
+  // (e.g. no negative number or letters for calories, no empty submission,...) and show an alertLinks to an external site. indicating if any input has invalid data.
   function handleSave() {
     if (description === '' || calories === '') {
       alert('Please fill in all required fields');
@@ -39,8 +43,18 @@ const AddDiet = ({navigation}) => {
       alert('Calories must be a positive number');
       return false;
     }
-    console.log(`Description: ${description}, Calories: ${calories}`);
+    console.log(`Description: ${description}, Calories: ${calories}, data: ${date}, isSpecial: ${isspecial} `);
+    const record = {
+      description: description,
+      calories: calories,
+      date: date,
+      isSpecial: isspecial,
+    };
+
+    writeToDb(record, "diet");
+    
     return true;
+
   }
 
   function handlespeical() {

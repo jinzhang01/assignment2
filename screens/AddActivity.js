@@ -6,7 +6,6 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../style/colors";
 import { useTheme } from '../theme/ThemeContext'; 
 import { writeToDb } from "../firebase/firestoreHelper";
-import { database } from '../firebase/firebaseSetup';
 
 
 
