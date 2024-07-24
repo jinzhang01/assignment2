@@ -57,20 +57,13 @@ const Activities = ({ navigation }) => {
     });
   }, [navigation]);
 
-
-  // create a mock list of activities
-  // const mockActivities = [
-  //   { name: 'Running', date: '2021-10-01', duration: 30 },
-  //   { name: 'Swimming', date: '2021-10-02', duration: 45 },
-  //   { name: 'Weights', date: '2021-10-03', duration: 60 },
-  //   { name: 'Yoga', date: '2021-10-04', duration: 90 },
-  // ];
-
-  // may move the flatlist to ItemsList component
+  const handleEdit = (item) => {
+    navigation.navigate('AddActivity', { item });
+  };
   
   return (
     <View style={dynamicStyles.container}>
-      <ItemsList contentType="activity" items={activities} />
+      <ItemsList contentType="activity" items={activities} onEdit={handleEdit} />
     </View>
   );
 };
