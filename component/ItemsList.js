@@ -3,35 +3,48 @@ import React from 'react';
 import { colors } from '../style/colors';
 
 const ItemsList = ({ contentType, items }) => {
+  
+  const renderItem = ({ item }) => {
+    // Format the date object to a string if it's a Date object
+    const formattedDate = item.date instanceof Date ? item.date.toLocaleDateString("en-US") : item.date;
+
+    return (
+      <View style={styles.itemContainer}>
+        <Text style={styles.itemText}>Activity: {item.activity}</Text>
+        <Text style={styles.itemText}>Date: {formattedDate}</Text>
+        {contentType === 'activity' ? (
+          <Text style={styles.itemText}>Duration: {item.duration} min</Text>
+        ) : (
+          <Text style={styles.itemText}>Calories: {item.calories}</Text>
+        )}
+        <Text style={styles.itemText}>Special: {item.isSpecial ? 'Yes' : 'No'}</Text>
+      </View>
+    );
+  };
+
   return (
     <FlatList
       data={items}
-      renderItem={({ item }) => (
-        <View style={styles.container}>
-          <Text> {item.name} </Text>
-          <Text> {item.date} </Text>
-          {contentType === 'activity' ? (
-            <Text> {item.duration} </Text>
-          ) : (
-            <Text> {item.calories} </Text>
-          )}
-        </View>
-      )}
-      keyExtractor={item => item.name}
+      renderItem={renderItem}
+      keyExtractor={item => item.id}
     />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 0.8,
-    flexDirection: 'row',
-    justifyContent: "space-between",
-    alignItems: "center",
+  itemContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     backgroundColor: colors.light,
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
+    borderRadius: 8,
+  },
+  itemText: {
+    fontSize: 16,
+    color: colors.Dark,
   },
 });
 
