@@ -5,6 +5,10 @@ import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../style/colors";
 import { useTheme } from '../theme/ThemeContext'; 
+import { writeToDb } from "../firebase/firestoreHelper";
+import { database } from '../firebase/firebaseSetup';
+
+
 
 const AddActivity = ({ navigation }) => {
   const [open, setOpen] = useState(false);
@@ -22,6 +26,8 @@ const AddActivity = ({ navigation }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [hasUserSelected, setHasUserSelected] = useState(false);
   const { theme } = useTheme(); 
+  const [record, setRecord] = useState({});
+
 
 
     const dynamicStyles = StyleSheet.create({
@@ -76,7 +82,17 @@ const AddActivity = ({ navigation }) => {
       alert("Duration must be a positive number");
       return false;
     }
-    console.log(`Activity: ${activity}, Duration: ${duration}, Date: ${date}`);
+    console.log(`Activity: ${activity}, Duration: ${duration}, Date: ${date}, flag: ${isSpecial}`);
+    
+    const newRecord = {
+      "activity": activity,
+      "duration": duration,
+      "date": date,
+      "isSpecial": isSpecial,
+    };
+
+    writeToDb(newRecord, "activities");
+    
     return true;
   }
 
