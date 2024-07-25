@@ -7,8 +7,8 @@ const ItemsList = ({ contentType, items, onEdit }) => {
 
   const renderItem = ({ item }) => {
     // Format the date object to a string if it's a Date object
-    const formattedDate = item.date instanceof Date ? item.date.toLocaleDateString("en-US") : item.date;
-
+    // const formattedDate = item.date instanceof Date ? item.date.toLocaleDateString("en-US") : item.date;
+    const formattedDate = item.date?.toDate().toLocaleDateString("en-US");
     return (
       <View style={styles.itemContainer}>
         <Text style={styles.itemText}>Activity: {item.activity}</Text>

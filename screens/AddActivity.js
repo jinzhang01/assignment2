@@ -1,10 +1,17 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import PressableButton from "../component/PressableButton";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../style/colors";
-import { useTheme } from '../theme/ThemeContext'; 
+import { useTheme } from "../theme/ThemeContext";
 import { writeToDb, updateDb } from "../firebase/firestoreHelper";
 
 const AddActivity = ({ navigation, route }) => {
@@ -18,12 +25,15 @@ const AddActivity = ({ navigation, route }) => {
     { label: "Weights", value: "Weights" },
     { label: "Yoga", value: "Yoga" },
   ]);
-  const [duration, setDuration] = useState(item ? item.duration.toString() : null);
+  const [duration, setDuration] = useState(
+    item ? item.duration.toString() : null
+  );
   const [isSpecial, setSpecial] = useState(item ? item.isSpecial : false);
-  const [date, setDate] = useState(item ? new Date(item.date.seconds * 1000) : new Date());
+  const [date, setDate] = useState(item ? item.date : new Date());
+
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [hasUserSelected, setHasUserSelected] = useState(false);
-  const { theme } = useTheme(); 
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (item) {
@@ -31,7 +41,7 @@ const AddActivity = ({ navigation, route }) => {
       setDuration(item.duration.toString());
       setDate(new Date(item.date.seconds * 1000));
       setSpecial(item.isSpecial);
-      setHasUserSelected(true); // ensure the date is marked as selected
+      setHasUserSelected(true);
     }
   }, [item]);
 
@@ -40,7 +50,7 @@ const AddActivity = ({ navigation, route }) => {
       flex: 1,
       padding: 20,
       backgroundColor: theme.background,
-      justifyContent: 'center',
+      justifyContent: "center",
     },
     label: {
       marginBottom: 10,
@@ -71,11 +81,22 @@ const AddActivity = ({ navigation, route }) => {
   };
 
   const formatDate = (date) => {
+    if (!(date instanceof Date)) {
+      console.error("Date is not a valid Date object:", date);
+      // Convert 'date' to a valid Date object or set a default
+      date = new Date(); // Set to current date or a default value
+    }
+
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
   const handleSave = async () => {
-    if (activity === null || duration === null || duration === "" || date === null) {
+    if (
+      activity === null ||
+      duration === null ||
+      duration === "" ||
+      date === null
+    ) {
       Alert.alert("Please fill in all required fields");
       return false;
     }
@@ -90,6 +111,7 @@ const AddActivity = ({ navigation, route }) => {
       date: date,
       isSpecial: isSpecial,
     };
+    console.log("Saving date:", date, "Type:", typeof date);
 
     try {
       if (item) {
@@ -97,7 +119,10 @@ const AddActivity = ({ navigation, route }) => {
       } else {
         await writeToDb(newRecord, "activities");
       }
-      Alert.alert("Success", item ? "Activity updated successfully" : "Activity added successfully");
+      Alert.alert(
+        "Success",
+        item ? "Activity updated successfully" : "Activity added successfully"
+      );
       navigation.goBack();
     } catch (error) {
       Alert.alert("Error", "Failed to save activity");
@@ -156,10 +181,8 @@ const AddActivity = ({ navigation, route }) => {
         <PressableButton pressedFunction={() => navigation.goBack()}>
           <Text style={styles.buttonTextCancel}>Cancel</Text>
         </PressableButton>
-        <PressableButton
-          pressedFunction={handleSave}
-        >
-          <Text style={styles.buttonTextSave}>{item ? 'Update' : 'Save'}</Text>
+        <PressableButton pressedFunction={handleSave}>
+          <Text style={styles.buttonTextSave}>{item ? "Update" : "Save"}</Text>
         </PressableButton>
       </View>
     </View>
@@ -171,7 +194,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: colors.Background,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   upperContainer: {
     marginBottom: 20,
@@ -189,7 +212,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.primary,
     marginBottom: 20,
-    marginTop: 5
+    marginTop: 5,
   },
   dropdownContainer: {
     backgroundColor: colors.light,

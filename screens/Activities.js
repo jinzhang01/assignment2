@@ -19,8 +19,10 @@ const Activities = ({ navigation }) => {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         // Convert Firestore timestamp to JavaScript Date object
-        const date = data.date ? new Date(data.date.seconds * 1000) : null;
-        newActivities.push({ ...data, id: doc.id, date });
+        // const date = data.date ? new Date(data.date.seconds * 1000) : null;
+        // const date = data.date?.toDate();
+        // newActivities.push({ ...data, id: doc.id, date });
+        newActivities.push({ ...data, id: doc.id });
       });
       setActivities(newActivities);
     });
