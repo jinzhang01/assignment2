@@ -12,7 +12,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../style/colors";
 import { useTheme } from "../theme/ThemeContext";
-import { writeToDb, updateDb } from "../firebase/firestoreHelper";
+import { writeToDb, updateDb, deleteFromDb } from "../firebase/firestoreHelper";
+
 
 const AddActivity = ({ navigation, route }) => {
   const { item } = route.params || {};
@@ -30,10 +31,29 @@ const AddActivity = ({ navigation, route }) => {
   );
   const [isSpecial, setSpecial] = useState(item ? item.isSpecial : false);
   const [date, setDate] = useState(item ? item.date : new Date());
-
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [hasUserSelected, setHasUserSelected] = useState(false);
   const { theme } = useTheme();
+
+  // if the activities from the firsbase database
+  // add headerRight button to delete the activity
+  if (item) {
+    useEffect(() => {
+      navigation.setOptions({
+        headerRight: () => (
+          <PressableButton 
+            pressedFunction={() => {
+              navigation.goBack();
+              deleteFromDb(item.id, "activities");
+            }}>
+            <Text style={styles.buttonTextCancel}>Delete</Text>
+          </PressableButton>
+        ),
+      });
+    }, [navigation]);
+  }
+
+
 
   useEffect(() => {
     if (item) {
@@ -198,7 +218,7 @@ const styles = StyleSheet.create({
   },
   upperContainer: {
     marginBottom: 20,
-    flex: 4,
+    flex: 10,
   },
   inputContainer: {
     marginBottom: 20,
