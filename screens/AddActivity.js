@@ -13,6 +13,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../style/colors";
 import { useTheme } from "../theme/ThemeContext";
 import { writeToDb, updateDb, deleteFromDb } from "../firebase/firestoreHelper";
+import Checkbox from 'expo-checkbox';
 
 
 const AddActivity = ({ navigation, route }) => {
@@ -52,8 +53,6 @@ const AddActivity = ({ navigation, route }) => {
       });
     }, [navigation]);
   }
-
-
 
   useEffect(() => {
     if (item) {
@@ -196,6 +195,22 @@ const AddActivity = ({ navigation, route }) => {
           )}
         </View>
       </View>
+
+      {/* checkbox for overriden special and need to save the result to databse*/}
+      <View>
+          {item && isSpecial && (
+            <>
+              <Text style={dynamicStyles.label}>Special? </Text>
+              <Checkbox
+                value={isSpecial}
+                onValueChange={setSpecial}
+                style={styles.checkbox}
+                
+              />
+            </>
+          )}
+        </View>
+
 
       <View style={styles.buttonContainer}>
         <PressableButton pressedFunction={() => navigation.goBack()}>
