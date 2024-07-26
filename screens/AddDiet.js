@@ -24,10 +24,10 @@ const AddDiet = ({ navigation, route }) => {
   const [hasUserSelected, setHasUserSelected] = useState(false);
   const { theme } = useTheme();
   const [override, setOverride] = useState(false);
-  
+
   const { item } = route.params || {};
 
-  const showCheckbox = (item ? item.isSpecial : false);
+  const showCheckbox = item ? item.isSpecial : false;
 
   useEffect(() => {
     if (item) {
@@ -90,7 +90,7 @@ const AddDiet = ({ navigation, route }) => {
   //When user press the save button, you should validate user's entries
   // (e.g. no negative number or letters for calories, no empty submission,...) and show an alertLinks to an external site. indicating if any input has invalid data.
   const handleSave = async () => {
-    if (description === "" || calories === "" || date === null) {
+    if (description === "" || calories === "" || date === null || !hasUserSelected) {
       alert("Please fill in all required fields");
       return false;
     }
@@ -123,7 +123,7 @@ const AddDiet = ({ navigation, route }) => {
               onPress: async () => {
                 await updateDb(item.id, record, "diet");
                 // Alert.alert("Success", "Activity updated successfully");
-                console.log("navigation:",navigation);
+                console.log("navigation:", navigation);
                 navigation.goBack();
               },
             },
@@ -151,7 +151,6 @@ const AddDiet = ({ navigation, route }) => {
       }
     }
   }, [calories]);
-
 
   const formatDate = (date) => {
     if (!(date instanceof Date)) {
@@ -204,7 +203,7 @@ const AddDiet = ({ navigation, route }) => {
                   mode="date"
                   is24Hour={true}
                   display="inline"
-                  onChange={onChangeDate} 
+                  onChange={onChangeDate}
                 />
               </View>
             )}
@@ -216,21 +215,18 @@ const AddDiet = ({ navigation, route }) => {
       <View>
         {item && showCheckbox && (
           <View style={styles.checkboxContainer}>
-
             <Text style={dynamicStyles.label}>
-
-              This item is marked as special. Select the {"\n"} checkbox if you would like to approve it.
-       
+              This item is marked as special. Select the {"\n"} checkbox if you
+              would like to approve it.
             </Text>
             <Checkbox
               style={styles.checkbox}
-              value={!isSpecial} 
+              value={!isSpecial}
               onValueChange={(newValue) => {
-                console.log('Checkbox clicked', newValue); 
+                console.log("Checkbox clicked", newValue);
                 setSpecial(false);
                 setOverride(true);
               }}
-              
             />
           </View>
         )}
@@ -242,7 +238,7 @@ const AddDiet = ({ navigation, route }) => {
         </PressableButton>
         <PressableButton
           pressedFunction={() => {
-            handleSave() 
+            handleSave();
           }}
         >
           <Text style={styles.buttonTextSave}>Save</Text>
@@ -327,8 +323,7 @@ const styles = StyleSheet.create({
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent : "center",
-
+    justifyContent: "center",
   },
   checkbox: {
     margin: 10,

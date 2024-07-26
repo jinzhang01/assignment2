@@ -121,8 +121,7 @@ const AddActivity = ({ navigation, route }) => {
   }
 
   const onChangeDate = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setDate(currentDate);
+    setDate(selectedDate);
     setHasUserSelected(true);
     setShowDatePicker(false);
   };
@@ -142,7 +141,8 @@ const AddActivity = ({ navigation, route }) => {
       activity === null ||
       duration === null ||
       duration === "" ||
-      date === null
+      date === null ||
+      !hasUserSelected
     ) {
       Alert.alert("Please fill in all required fields");
       return false;
