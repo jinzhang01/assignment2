@@ -28,7 +28,6 @@ const AddDiet = ({ navigation, route }) => {
 
   const { item } = route.params || {};
 
-  console.log("get item", item);
   const showCheckbox = (item ? item.isSpecial : false);
 
   useEffect(() => {
@@ -125,6 +124,7 @@ const AddDiet = ({ navigation, route }) => {
               onPress: async () => {
                 await updateDb(item.id, record, "diet");
                 // Alert.alert("Success", "Activity updated successfully");
+                console.log("navigation:",navigation);
                 navigation.goBack();
               },
             },
@@ -217,7 +217,6 @@ const AddDiet = ({ navigation, route }) => {
             <Checkbox
               value={!isSpecial}
               onValueChange={(newValue) => {
-                console.log("Checkbox clicked", newValue); // Debugging statement
                 setSpecial(false);
               }}
               style={styles.checkbox}
@@ -236,7 +235,7 @@ const AddDiet = ({ navigation, route }) => {
         </PressableButton>
         <PressableButton
           pressedFunction={() => {
-            handleSave() && navigation.goBack();
+            handleSave() 
           }}
         >
           <Text style={styles.buttonTextSave}>Save</Text>
