@@ -16,6 +16,7 @@ import { writeToDb, updateDb, deleteFromDb } from "../firebase/firestoreHelper";
 import Checkbox from "expo-checkbox";
 import { AntDesign } from "@expo/vector-icons";
 
+
 const AddActivity = ({ navigation, route }) => {
   const { item } = route.params || {};
   const [open, setOpen] = useState(false);
@@ -39,6 +40,7 @@ const AddActivity = ({ navigation, route }) => {
   const [hasUserSelected, setHasUserSelected] = useState(false);
   const { theme } = useTheme();
   const [showCheckbox, setShowCheckbox] = useState(item ? item.isSpecial : false);
+  const [override, setOverride] = useState(false);
 
   // if the activities from the firsbase database
   // add headerRight button to delete the activity
@@ -46,6 +48,12 @@ const AddActivity = ({ navigation, route }) => {
     navigation.goBack();
     deleteFromDb(item.id, "activities");
   }
+
+  useEffect(() => {
+    if (!override) {
+      checkDuration();
+    }
+  }, [duration, activity]);
 
   useEffect(() => {
     if (item) {
@@ -102,20 +110,15 @@ const AddActivity = ({ navigation, route }) => {
 
   console.log("date:", showDatePicker);
 
-  const checkDuration = (inputValue) => {
-    const numericValue = parseInt(inputValue, 10);
-    setDuration(inputValue);
-    if (
-      numericValue > 60 &&
-      (activity === "Weights" || activity === "Running")
-    ) {
+ function checkDuration(){
+    if (duration > 60 && (activity === "Weights" || activity === "Running")) {
       setSpecial(true);
       console.log("Special");
     } else {
       setSpecial(false);
       console.log("Not Special");
     }
-  };
+  }
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -157,6 +160,8 @@ const AddActivity = ({ navigation, route }) => {
     };
     console.log("Saving date:", date, "Type:", typeof date);
 
+    !override && checkDuration();
+
     try {
       if (item) {
         // add a confirm dialog to update the activity
@@ -188,6 +193,7 @@ const AddActivity = ({ navigation, route }) => {
     }
   };
 
+
   return (
     <View style={dynamicStyles.container}>
       <View style={styles.upperContainer}>
@@ -210,7 +216,7 @@ const AddActivity = ({ navigation, route }) => {
           <TextInput
             keyboardType="numeric"
             value={duration}
-            onChangeText={checkDuration}
+            onChangeText={(inputValue) => setDuration(inputValue)} // Updated here
             style={styles.textInput}
           />
         </View>
@@ -250,8 +256,9 @@ const AddActivity = ({ navigation, route }) => {
               style={styles.checkbox}
               value={!isSpecial} 
               onValueChange={(newValue) => {
-                console.log('Checkbox clicked', newValue); // Debugging statement
+                console.log('Checkbox clicked', newValue); 
                 setSpecial(false);
+                setOverride(true);
               }}
               
             />

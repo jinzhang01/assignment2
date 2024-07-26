@@ -23,9 +23,8 @@ const AddDiet = ({ navigation, route }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [hasUserSelected, setHasUserSelected] = useState(false);
   const { theme } = useTheme();
+  const [override, setOverride] = useState(false);
   
-
-
   const { item } = route.params || {};
 
   const showCheckbox = (item ? item.isSpecial : false);
@@ -141,16 +140,19 @@ const AddDiet = ({ navigation, route }) => {
     }
   };
 
-  function checkValue(value) {
-    setCalories(value);
-    if (value > 800) {
-      setSpecial(true);
-      console.log("Special");
-    } else {
-      setSpecial(false);
-      console.log("Not Special");
+  useEffect(() => {
+    if (!override) {
+      if (calories > 800) {
+        setSpecial(true);
+        console.log("Special");
+      } else {
+        setSpecial(false);
+        console.log("Not Special");
+      }
     }
-  }
+  }, [calories]);
+
+
   const formatDate = (date) => {
     if (!(date instanceof Date)) {
       console.error("Date is not a valid Date object:", date);
@@ -183,7 +185,7 @@ const AddDiet = ({ navigation, route }) => {
           style={styles.textInput}
           placeholder="Enter calories"
           value={calories}
-          onChangeText={checkValue}
+          onChangeText={(inputValue) => setCalories(inputValue)}
         />
         <View>
           <Text style={dynamicStyles.label}>Date *</Text>
@@ -226,6 +228,7 @@ const AddDiet = ({ navigation, route }) => {
               onValueChange={(newValue) => {
                 console.log('Checkbox clicked', newValue); 
                 setSpecial(false);
+                setOverride(true);
               }}
               
             />
