@@ -1,89 +1,177 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import PressableButton from '../component/PressableButton';
-import { colors } from '../style/colors';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import PressableButton from "../component/PressableButton";
+import { colors } from "../style/colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useTheme } from '../theme/ThemeContext';
-import { writeToDb } from "../firebase/firestoreHelper";
+import { useTheme } from "../theme/ThemeContext";
+import { writeToDb, updateDb, deleteFromDb } from "../firebase/firestoreHelper";
+import Checkbox from "expo-checkbox";
+import { AntDesign } from "@expo/vector-icons";
 
-const AddDiet = ({navigation}) => {
-  const [description, setDescription] = useState('');
-  const [calories, setCalories] = useState('');
-  const [isspecial, setSpecial] = useState(false);
+const AddDiet = ({ navigation, route }) => {
+  const [description, setDescription] = useState("");
+  const [calories, setCalories] = useState("");
+  const [isSpecial, setSpecial] = useState(false);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [hasUserSelected, setHasUserSelected] = useState(false);
-  const { theme } = useTheme(); 
-  const [record, setRecord] = useState({});
+  const { theme } = useTheme();
+  
 
+
+  const { item } = route.params || {};
+
+  console.log("get item", item);
+  const showCheckbox = (item ? item.isSpecial : false);
+
+  useEffect(() => {
+    if (item) {
+      setDescription(item.description);
+      setCalories(item.calories.toString());
+      setSpecial(item.isSpecial);
+      setDate(new Date(item.date.seconds * 1000));
+      setSpecial(item.isSpecial);
+      setHasUserSelected(true);
+    }
+  }, [item]);
+
+  function confirmDelete() {
+    navigation.goBack();
+    deleteFromDb(item.id, "diet");
+  }
+
+  useEffect(() => {
+    if (item) {
+      navigation.setOptions({
+        headerRight: () => (
+          <PressableButton
+            pressedFunction={() => {
+              Alert.alert(
+                "Delete Activity",
+                "Are you sure you want to delete this activity?",
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  { text: "Delete", onPress: () => confirmDelete() },
+                ]
+              );
+            }}
+          >
+            <AntDesign name="delete" size={24} color="black" />
+          </PressableButton>
+        ),
+      });
+    }
+  }, [navigation, item]);
 
   const dynamicStyles = StyleSheet.create({
     container: {
       flex: 1,
       padding: 20,
       backgroundColor: theme.background, // Use theme background color
-      justifyContent: 'center',
+      justifyContent: "center",
     },
     label: {
       marginBottom: 10,
-      color: theme.text, 
+      color: theme.text,
       fontWeight: "bold",
     },
-   
   });
 
-  //When user press the save button, you should validate user's entries 
+  //When user press the save button, you should validate user's entries
   // (e.g. no negative number or letters for calories, no empty submission,...) and show an alertLinks to an external site. indicating if any input has invalid data.
-  function handleSave() {
-    if (description === '' || calories === '') {
-      alert('Please fill in all required fields');
+  const handleSave = async () => {
+    if (description === "" || calories === "" || date === null) {
+      alert("Please fill in all required fields");
       return false;
     }
     if (isNaN(calories) || calories < 0) {
-      alert('Calories must be a positive number');
+      alert("Calories must be a positive number");
       return false;
     }
-    console.log(`Description: ${description}, Calories: ${calories}, data: ${date}, isSpecial: ${isspecial} `);
+
     const record = {
       description: description,
       calories: calories,
       date: date,
-      isSpecial: isspecial,
+      isSpecial: isSpecial,
     };
 
-    writeToDb(record, "diet");
-    
-    return true;
+    try {
+      if (item) {
+        // add a confirm dialog to update the activity
+        Alert.alert(
+          "Important",
+          "Are you sure you want to save these changes?",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Save",
+              onPress: async () => {
+                await updateDb(item.id, record, "diet");
+                // Alert.alert("Success", "Activity updated successfully");
+                navigation.goBack();
+              },
+            },
+          ]
+        );
+      } else {
+        await writeToDb(record, "diet");
+        Alert.alert("Success", "Activity added successfully");
+        navigation.goBack();
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to save activity");
+      console.error("Error saving document: ", error);
+    }
+  };
 
-  }
-
-  function handlespeical() {
-    if (calories > 800) {
+  function checkValue(value) {
+    setCalories(value);
+    if (value > 800) {
       setSpecial(true);
-      console.log('Special');
+      console.log("Special");
     } else {
       setSpecial(false);
-      console.log('Not Special');
+      console.log("Not Special");
     }
   }
-
   const formatDate = (date) => {
+    if (!(date instanceof Date)) {
+      console.error("Date is not a valid Date object:", date);
+      // Convert 'date' to a valid Date object or set a default
+      date = new Date(); // Set to current date or a default value
+    }
+
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
-    setHasUserSelected(true); 
+    setHasUserSelected(true);
     setShowDatePicker(false);
   };
-
 
   return (
     <View style={dynamicStyles.container}>
       <View style={dynamicStyles.upperContainer}>
         <Text style={dynamicStyles.label}>Description *</Text>
-        <TextInput 
+        <TextInput
           style={styles.textInputLarger}
           placeholder="Enter description"
           value={description}
@@ -94,43 +182,62 @@ const AddDiet = ({navigation}) => {
           style={styles.textInput}
           placeholder="Enter calories"
           value={calories}
-          keyboardType="numeric"
-          onChangeText={setCalories}
-          onBlur={handlespeical}
+          onChangeText={checkValue}
         />
-        <View >
-        <Text style={dynamicStyles.label}>Date *</Text>
-            <View style={styles.index}>
-              <TouchableOpacity
-                onPress={() => setShowDatePicker(true)}
-                style={styles.dateInput}
-              >
-              
+        <View>
+          <Text style={dynamicStyles.label}>Date *</Text>
+          <View style={styles.index}>
+            <TouchableOpacity
+              onPress={() => setShowDatePicker(true)}
+              style={styles.dateInput}
+            >
               {hasUserSelected && <Text>{formatDate(date)}</Text>}
-              </TouchableOpacity >
-              {showDatePicker && (
-                <View style={styles.modalContainer}>
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={date}
-                    mode="date"
-                    is24Hour={true}
-                    display="inline"
-                    onChange={onChangeDate} // Use the corrected onChangeDate function
-                  />
-                </View>
-              )}
-            </View>  
+            </TouchableOpacity>
+            {showDatePicker && (
+              <View style={styles.modalContainer}>
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode="date"
+                  is24Hour={true}
+                  display="inline"
+                  onChange={onChangeDate} 
+                />
+              </View>
+            )}
+          </View>
         </View>
+      </View>
+
+      {/* checkbox for overridden special and need to save the result to database */}
+      <View>
+        {item && showCheckbox && (
+          <View>
+            <Checkbox
+              value={!isSpecial}
+              onValueChange={(newValue) => {
+                console.log("Checkbox clicked", newValue); // Debugging statement
+                setSpecial(false);
+              }}
+              style={styles.checkbox}
+            />
+            <Text style={dynamicStyles.label}>
+              This item is marked as special. Select the checkbox if you would
+              like to approve it.
+            </Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.buttonContainer}>
         <PressableButton pressedFunction={() => navigation.goBack()}>
           <Text style={styles.buttonTextCancel}>Cancel</Text>
         </PressableButton>
-        <PressableButton pressedFunction={ () => {
-          handleSave() && navigation.goBack();
-        }}>
+        <PressableButton
+          pressedFunction={() => {
+            handleSave() && navigation.goBack();
+          }}
+        >
           <Text style={styles.buttonTextSave}>Save</Text>
         </PressableButton>
       </View>
@@ -138,13 +245,12 @@ const AddDiet = ({navigation}) => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: colors.Background,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   upperContainer: {
     marginBottom: 20,
@@ -187,7 +293,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 40,
   },
-
 
   buttonContainer: {
     flex: 1,
