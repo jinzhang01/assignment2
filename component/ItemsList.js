@@ -2,6 +2,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 import React from 'react';
 import { colors } from '../style/colors';
 import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 const ItemsList = ({ contentType, items, onEdit }) => {
 
@@ -11,14 +12,19 @@ const ItemsList = ({ contentType, items, onEdit }) => {
     const formattedDate = item.date?.toDate().toLocaleDateString("en-US");
     return (
       <View style={styles.itemContainer}>
-        <Text style={styles.itemText}>Activity: {item.activity}</Text>
-        <Text style={styles.itemText}>Date: {formattedDate}</Text>
+
+        <Text style={styles.itemText}>{item.activity}</Text>
+
+        {item.isSpecial && <Entypo name="warning" size={24} color="orange" />} 
+        
+        <Text style={styles.itemTextBox}>{formattedDate}</Text>
+
         {contentType === 'activity' ? (
-          <Text style={styles.itemText}>Duration: {item.duration} min</Text>
+          <Text style={styles.itemTextBox}>{item.duration} min</Text>
         ) : (
-          <Text style={styles.itemText}>Calories: {item.calories}</Text>
+          <Text style={styles.itemTextBox}>{item.calories}</Text>
         )}
-        <Text style={styles.itemText}>Special: {item.isSpecial ? 'Yes' : 'No'}</Text>
+
         <TouchableOpacity onPress={() => onEdit(item)}>
           <AntDesign name="edit" size={24} color="black" />
         </TouchableOpacity>
@@ -37,7 +43,7 @@ const ItemsList = ({ contentType, items, onEdit }) => {
 
 const styles = StyleSheet.create({
   itemContainer: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     backgroundColor: colors.light,
@@ -49,6 +55,15 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 16,
     color: colors.Dark,
+    padding: 2,
+    marginHorizontal: 2,
+  },
+  itemTextBox: {
+    fontSize: 16,
+    color: colors.dark,
+    backgroundColor: colors.cardBackground, 
+    padding: 2,
+    marginHorizontal: 2,
   },
 });
 
