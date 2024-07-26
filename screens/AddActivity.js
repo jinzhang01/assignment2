@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import {View,Text,TextInput,TouchableOpacity,StyleSheet,Alert,} from "react-native";
 import React, { useState, useEffect } from "react";
 import PressableButton from "../component/PressableButton";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -13,7 +6,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { colors } from "../style/colors";
 import { useTheme } from "../theme/ThemeContext";
 import { writeToDb, updateDb, deleteFromDb } from "../firebase/firestoreHelper";
-import Checkbox from 'expo-checkbox';
+import Checkbox from "expo-checkbox";
+import { AntDesign } from '@expo/vector-icons';
 
 
 const AddActivity = ({ navigation, route }) => {
@@ -38,22 +32,36 @@ const AddActivity = ({ navigation, route }) => {
 
   // if the activities from the firsbase database
   // add headerRight button to delete the activity
-  if (item) {
-    useEffect(() => {
+  function confirmDelete() {
+    navigation.goBack();
+    deleteFromDb(item.id, "activities");
+  }
+  
+
+  useEffect(() => {
+    if (item) {
       navigation.setOptions({
         headerRight: () => (
-          <PressableButton 
+          <PressableButton
             pressedFunction={() => {
-              navigation.goBack();
-              deleteFromDb(item.id, "activities");
-            }}>
-            <Text style={styles.buttonTextCancel}>Delete</Text>
+              Alert.alert(
+                "Delete Activity",
+                "Are you sure you want to delete this activity?",
+                [
+                  { text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel" },
+                  { text: "Delete", onPress: () => confirmDelete() },
+                ]
+              );
+            }}
+          >
+            <AntDesign name="delete" size={24} color="black" />
           </PressableButton>
         ),
       });
-    }, [navigation]);
-  }
-
+    }
+  }, [navigation, item]);
+  
+  
   useEffect(() => {
     if (item) {
       setActivity(item.activity);
@@ -83,7 +91,7 @@ const AddActivity = ({ navigation, route }) => {
   const checkDuration = (inputValue) => {
     const numericValue = parseInt(inputValue, 10);
     setDuration(inputValue);
-    if (numericValue > 60) {
+    if (numericValue > 60 && (activity === "Weights" || activity === "Running")) {
       setSpecial(true);
       console.log("Special");
     } else {
@@ -134,15 +142,25 @@ const AddActivity = ({ navigation, route }) => {
 
     try {
       if (item) {
-        await updateDb(item.id, newRecord, "activities");
+        // add a confirm dialog to update the activity
+        Alert.alert(
+          "Important",
+          "Are you sure you want to save these changes?",
+          [
+            { text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel" },
+            { text: "Save", onPress: async () => {
+                await updateDb(item.id, newRecord, "activities");
+                Alert.alert("Success", "Activity updated successfully");
+                navigation.goBack();
+              }
+            },
+          ]
+        );
       } else {
         await writeToDb(newRecord, "activities");
+        Alert.alert("Success", "Activity added successfully");
+        navigation.goBack();
       }
-      Alert.alert(
-        "Success",
-        item ? "Activity updated successfully" : "Activity added successfully"
-      );
-      navigation.goBack();
     } catch (error) {
       Alert.alert("Error", "Failed to save activity");
       console.error("Error saving document: ", error);
@@ -198,19 +216,17 @@ const AddActivity = ({ navigation, route }) => {
 
       {/* checkbox for overriden special and need to save the result to databse*/}
       <View>
-          {item && isSpecial && (
-            <>
-              <Text style={dynamicStyles.label}>Special? </Text>
-              <Checkbox
-                value={isSpecial}
-                onValueChange={setSpecial}
-                style={styles.checkbox}
-                
-              />
-            </>
-          )}
-        </View>
-
+        {item && isSpecial && (
+          <>
+            <Text style={dynamicStyles.label}>Special? </Text>
+            <Checkbox
+              value={isSpecial}
+              onValueChange={setSpecial}
+              style={styles.checkbox}
+            />
+          </>
+        )}
+      </View>
 
       <View style={styles.buttonContainer}>
         <PressableButton pressedFunction={() => navigation.goBack()}>
