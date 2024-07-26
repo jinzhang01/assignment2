@@ -50,6 +50,7 @@ const AddDiet = ({ navigation, route }) => {
   useEffect(() => {
     if (item) {
       navigation.setOptions({
+        headerTitle: "Edit",
         headerRight: () => (
           <PressableButton
             pressedFunction={() => {
