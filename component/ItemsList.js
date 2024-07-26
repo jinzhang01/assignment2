@@ -11,6 +11,7 @@ const ItemsList = ({ contentType, items, onEdit }) => {
     // const formattedDate = item.date instanceof Date ? item.date.toLocaleDateString("en-US") : item.date;
     const formattedDate = item.date?.toDate().toLocaleDateString("en-US");
     return (
+      <TouchableOpacity onPress={() => onEdit(item)}>
       <View style={styles.itemContainer}>
 
         <Text style={styles.itemText}>{item.activity}</Text>
@@ -25,10 +26,9 @@ const ItemsList = ({ contentType, items, onEdit }) => {
           <Text style={styles.itemTextBox}>{item.calories}</Text>
         )}
 
-        <TouchableOpacity onPress={() => onEdit(item)}>
-          <AntDesign name="edit" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
+
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -55,15 +55,15 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 16,
     color: colors.Dark,
-    padding: 2,
-    marginHorizontal: 2,
+    padding: 5,
+    marginHorizontal: 5,
   },
   itemTextBox: {
     fontSize: 16,
     color: colors.dark,
     backgroundColor: colors.cardBackground, 
-    padding: 2,
-    marginHorizontal: 2,
+    padding: 5,
+    marginHorizontal: 5,
   },
 });
 
