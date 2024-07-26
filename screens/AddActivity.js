@@ -262,7 +262,7 @@ const AddActivity = ({ navigation, route }) => {
           <Text style={styles.buttonTextCancel}>Cancel</Text>
         </PressableButton>
         <PressableButton pressedFunction={handleSave}>
-          <Text style={styles.buttonTextSave}>{item ? "Update" : "Save"}</Text>
+          <Text style={styles.buttonTextSave}>Save</Text>
         </PressableButton>
       </View>
     </View>
