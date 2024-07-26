@@ -14,7 +14,10 @@ const ItemsList = ({ contentType, items, onEdit }) => {
       <TouchableOpacity onPress={() => onEdit(item)}>
       <View style={styles.itemContainer}>
 
-        <Text style={styles.itemText}>{item.activity}</Text>
+        {contentType === 'activity' ? (
+        <Text style={styles.itemText}>{item.activity}</Text>) : (
+        <Text style={styles.itemText}>{item.description}</Text>)}
+      
 
         {item.isSpecial && <Entypo name="warning" size={24} color="orange" />} 
         
