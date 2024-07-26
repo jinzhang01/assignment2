@@ -26,6 +26,9 @@ const AddActivity = ({ navigation, route }) => {
     { label: "Swimming", value: "Swimming" },
     { label: "Weights", value: "Weights" },
     { label: "Yoga", value: "Yoga" },
+    { label: "Cycling", value: "Cycling"},
+    { label: "Hiking", value: "Hiking"}
+
   ]);
   const [duration, setDuration] = useState(
     item ? item.duration.toString() : null
@@ -57,11 +60,11 @@ const AddActivity = ({ navigation, route }) => {
                 "Are you sure you want to delete this activity?",
                 [
                   {
-                    text: "Cancel",
+                    text: "No",
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel",
                   },
-                  { text: "Delete", onPress: () => confirmDelete() },
+                  { text: "Yes", onPress: () => confirmDelete() },
                 ]
               );
             }}
@@ -141,7 +144,7 @@ const AddActivity = ({ navigation, route }) => {
       Alert.alert("Please fill in all required fields");
       return false;
     }
-    if (isNaN(duration) || duration < 0) {
+    if (isNaN(duration) || duration <= 0) {
       Alert.alert("Duration must be a positive number");
       return false;
     }
@@ -170,7 +173,6 @@ const AddActivity = ({ navigation, route }) => {
               text: "Save",
               onPress: async () => {
                 await updateDb(item.id, newRecord, "activities");
-                Alert.alert("Success", "Activity updated successfully");
                 navigation.goBack();
               },
             },
@@ -178,7 +180,6 @@ const AddActivity = ({ navigation, route }) => {
         );
       } else {
         await writeToDb(newRecord, "activities");
-        Alert.alert("Success", "Activity added successfully");
         navigation.goBack();
       }
     } catch (error) {
@@ -238,19 +239,22 @@ const AddActivity = ({ navigation, route }) => {
       {/* checkbox for overridden special and need to save the result to database */}
       <View>
         {item && showCheckbox && (
-          <View>
+          <View style={styles.checkboxContainer}>
+
+            <Text style={dynamicStyles.label}>
+
+              This item is marked as special. Select the {"\n"} checkbox if you would like to approve it.
+       
+            </Text>
             <Checkbox
+              style={styles.checkbox}
               value={!isSpecial} 
               onValueChange={(newValue) => {
                 console.log('Checkbox clicked', newValue); // Debugging statement
                 setSpecial(false);
               }}
-              style={styles.checkbox}
+              
             />
-            <Text style={dynamicStyles.label}>
-              This item is marked as special. Select the checkbox if you would
-              like to approve it.
-            </Text>
           </View>
         )}
       </View>
@@ -330,6 +334,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cancel,
     borderRadius: 5,
   },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent : "center",
+
+  },
+  checkbox: {
+    margin: 10,
+  },
+
 });
 
 export default AddActivity;

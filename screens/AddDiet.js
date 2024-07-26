@@ -58,11 +58,11 @@ const AddDiet = ({ navigation, route }) => {
                 "Are you sure you want to delete this activity?",
                 [
                   {
-                    text: "Cancel",
+                    text: "No",
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel",
                   },
-                  { text: "Delete", onPress: () => confirmDelete() },
+                  { text: "Yes", onPress: () => confirmDelete() },
                 ]
               );
             }}
@@ -95,7 +95,7 @@ const AddDiet = ({ navigation, route }) => {
       alert("Please fill in all required fields");
       return false;
     }
-    if (isNaN(calories) || calories < 0) {
+    if (isNaN(calories) || calories <= 0) {
       alert("Calories must be a positive number");
       return false;
     }
@@ -132,7 +132,7 @@ const AddDiet = ({ navigation, route }) => {
         );
       } else {
         await writeToDb(record, "diet");
-        Alert.alert("Success", "Activity added successfully");
+
         navigation.goBack();
       }
     } catch (error) {
@@ -213,18 +213,22 @@ const AddDiet = ({ navigation, route }) => {
       {/* checkbox for overridden special and need to save the result to database */}
       <View>
         {item && showCheckbox && (
-          <View>
+          <View style={styles.checkboxContainer}>
+
+            <Text style={dynamicStyles.label}>
+
+              This item is marked as special. Select the {"\n"} checkbox if you would like to approve it.
+       
+            </Text>
             <Checkbox
-              value={!isSpecial}
+              style={styles.checkbox}
+              value={!isSpecial} 
               onValueChange={(newValue) => {
+                console.log('Checkbox clicked', newValue); 
                 setSpecial(false);
               }}
-              style={styles.checkbox}
+              
             />
-            <Text style={dynamicStyles.label}>
-              This item is marked as special. Select the checkbox if you would
-              like to approve it.
-            </Text>
           </View>
         )}
       </View>
@@ -316,6 +320,15 @@ const styles = StyleSheet.create({
   },
   index: {
     zIndex: 10,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent : "center",
+
+  },
+  checkbox: {
+    margin: 10,
   },
 });
 
