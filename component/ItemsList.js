@@ -1,10 +1,10 @@
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { colors } from '../style/colors';
-import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 const ItemsList = ({ contentType, items, onEdit }) => {
+
 
   const renderItem = ({ item }) => {
     // Format the date object to a string if it's a Date object
